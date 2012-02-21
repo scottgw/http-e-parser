@@ -50,6 +50,4 @@ feature
 	id: INTEGER
 		deferred
 		end
-
-	User_agent_id: INTEGER = 19
 end
