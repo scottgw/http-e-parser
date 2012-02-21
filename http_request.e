@@ -45,6 +45,56 @@ feature
 			uri := a_uri
 		end
 
+	add_range (int: INTEGER_INTERVAL)
+		do
+			create range.make (int)
+			request_headers.extend (range)
+		end
+
+	add_accept (list: LIST [TUPLE [STRING, STRING]])
+		do
+			create accept.make (list)
+			request_headers.extend (accept)
+		end
+
+	add_accept_language (list: LIST [STRING])
+		do
+			create accept_language.make (list)
+			request_headers.extend (accept_language)
+		end
+
+	add_accept_charset (list: LIST [STRING])
+		do
+			create accept_charset.make (list)
+			request_headers.extend (accept_charset)
+		end
+
+	add_accept_encoding (list: LIST [STRING])
+		do
+			create accept_encoding.make (list)
+			request_headers.extend (accept_encoding)
+		end
+
+	add_user_agent (a_str: STRING)
+		do
+			create user_agent.make (a_str)
+			request_headers.extend (user_agent)
+		end
+
+	add_host (a_str: STRING)
+		do
+			create host.make (a_str)
+			request_headers.extend (host)
+		end
+
+	range: RANGE
+	accept: ACCEPT
+	accept_language: ACCEPT_LANGUAGE
+	accept_charset: ACCEPT_CHARSET
+	accept_encoding: ACCEPT_ENCODING
+	user_agent: USER_AGENT
+	host: HOST
+
 	general_headers: ARRAYED_LIST [GENERAL_HEADER]
 	request_headers: ARRAYED_LIST [REQUEST_HEADER]
 
