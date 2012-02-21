@@ -50,6 +50,7 @@ feature {NONE}
 		local
 			tag: STRING
 			list: ARRAYED_LIST [STRING]
+
 			reqs: ARRAYED_LIST [REQUEST_HEADER]
 			gens: ARRAYED_LIST [GENERAL_HEADER]
 			alive: BOOLEAN
@@ -59,28 +60,78 @@ feature {NONE}
 			tag := words [1]
 
 			if tag.is_equal ("Accept") then
-				list := tokenize_comma (words [2])
-				reqs.extend (create {REQUEST_HEADER}.accept (list))
+				parse_accepts (words [2])
 			elseif tag.is_equal ("Accept-Language") then
 				list := tokenize_comma (words [2])
-				reqs.extend (create {REQUEST_HEADER}.accept_language (list))
+				request.add_accept_language (list)
 			elseif tag.is_equal ("Accept-Charset") then
 				list := tokenize_comma (words [2])
-				reqs.extend (create {REQUEST_HEADER}.accept_charset (list))
+				request.add_accept_charset (list)
 			elseif tag.is_equal ("Accept-Encoding") then
 				list := tokenize_comma (words [2])
-				reqs.extend (create {REQUEST_HEADER}.accept_encoding (list))
+				request.add_accept_encoding (list)
 			elseif tag.is_equal ("Host") then
-				reqs.extend (create {REQUEST_HEADER}.host (words[2]))
+				request.add_host (words [2])
 			elseif tag.is_equal ("User-Agent") then
-				list := words.twin
-				list.go_i_th (2)
-				list.remove_left
-				reqs.extend (create {REQUEST_HEADER}.user_agent (words))
+				request.add_user_agent (words [2])
 			elseif tag.is_equal ("Connection") then
 				alive := words[2].as_lower.is_equal ("keep-alive")
 				gens.extend (create {GENERAL_HEADER}.connection (alive))
+			elseif tag.is_equal ("Range") then
+				request.add_range (parse_range (words[2]))
 			end
+		end
+
+	parse_accepts (a_str: STRING)
+		local
+			types: LIST [STRING]
+			type_split: LIST [STRING]
+			tuple_list: ARRAYED_LIST [TUPLE [STRING, STRING]]
+		do
+			types := tokenize_comma (a_str)
+
+			create tuple_list.make (10)
+
+			across
+				types as tc
+			loop
+				--
+				type_split := tc.item.split ('/')
+				tuple_list.extend ([type_split [1], type_split [2]])
+			end
+
+			request.add_accept (tuple_list)
+		end
+
+	parse_range (a_str: STRING): INTEGER_INTERVAL
+		local
+			start_range: STRING
+			end_range: STRING
+			split: LIST [STRING]
+			start_i: INTEGER
+			end_i: INTEGER
+		do
+			split := a_str.split ('=')
+			start_range := split [1]
+			end_range := split [2]
+
+			if start_range.is_empty then
+				start_i := -1
+			elseif start_range.is_integer then
+				start_i := start_range.to_integer
+			else
+				error := True
+			end
+
+			if end_range.is_empty then
+				end_i := {INTEGER}.max_value
+			elseif end_range.is_integer then
+				end_i := end_range.to_integer
+			else
+				error := True
+			end
+
+			create Result.make (start_i, end_i)
 		end
 
 	parse_first_line (words: ARRAYED_LIST [STRING])

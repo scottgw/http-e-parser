@@ -7,6 +7,12 @@ note
 class
 	REQUEST_URI
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 create
 	star, absolute, relative
 
@@ -44,6 +50,17 @@ feature
 
 			if i /= 0 then
 				Result := resource.substring (i+1, 1)
+			end
+		end
+
+	out: STRING
+		do
+			if is_star then
+				Result := "*"
+			elseif is_absolute then
+				Result := host + resource
+			else
+				Result := resource
 			end
 		end
 
