@@ -30,8 +30,17 @@ feature
 			set_method (meth)
 		end
 
+	major_version: INTEGER
+	minor_version: INTEGER
+
 	method: HTTP_METHOD
 	uri: REQUEST_URI
+
+	set_version (major, minor: INTEGER)
+		do
+			major_version := major
+			minor_version := minor
+		end
 
 	set_method (meth: HTTP_METHOD)
 		do
@@ -47,6 +56,8 @@ feature
 
 	general_headers: ARRAYED_LIST [GENERAL_HEADER]
 	request_headers: ARRAYED_LIST [REQUEST_HEADER]
+
+	accept: REQUEST_HEADER
 
 	set_complete
 		do

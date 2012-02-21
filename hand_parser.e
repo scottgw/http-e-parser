@@ -149,7 +149,11 @@ feature {NONE}
 
 	verify_http (a_str: STRING)
 		do
-			if not a_str.is_equal ("HTTP/1.1") then
+			if a_str.is_equal ("HTTP/1.1") then
+				request.set_version (1,1)
+			elseif a_str.is_equal ("HTTP/1.0") then
+				request.set_version (1,0)
+			else
 				error := True
 			end
 		end
