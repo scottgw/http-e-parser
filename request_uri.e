@@ -8,7 +8,7 @@ class
 	REQUEST_URI
 
 create
-	star, make
+	star, absolute, relative
 
 feature
 	star
@@ -18,11 +18,33 @@ feature
 
 	is_star: BOOLEAN
 
-	make (a_str: STRING)
+	absolute (a_host: STRING; a_resource: STRING)
 		do
-			str := a_str.twin
+			is_absolute := True
+			host := a_host
+			resource := a_resource
 		end
 
-	str: STRING
+	relative (a_str: STRING)
+		do
+			is_absolute := False
+			resource := a_str.twin
+		end
+
+	is_absolute: BOOLEAN
+
+	host: STRING
+	resource: STRING
+
+	extension: STRING
+		local
+			i: INTEGER
+		do
+			i := resource.last_index_of ('.', resource.count)
+
+			if i /= 0 then
+				Result := resource.substring (i+1, 1)
+			end
+		end
 
 end

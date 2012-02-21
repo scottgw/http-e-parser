@@ -11,7 +11,7 @@ inherit ANY
 	redefine
 		out
 	end
-	
+
 
 create
 	options,
@@ -65,6 +65,47 @@ feature
 		do
 			id := connect_id
 		end
+
+	is_options: BOOLEAN
+		do
+			Result := id = options_id
+		end
+
+	is_get: BOOLEAN
+		do
+			Result := id = get_id
+		end
+
+	is_head: BOOLEAN
+		do
+			Result := id = head_id
+		end
+
+	is_post: BOOLEAN
+		do
+			Result := id = post_id
+		end
+
+	is_put: BOOLEAN
+		do
+			Result := id = put_id
+		end
+
+	is_delete: BOOLEAN
+		do
+			Result := id = delete_id
+		end
+
+	is_trace: BOOLEAN
+		do
+			Result := id = trace_id
+		end
+
+	is_connect: BOOLEAN
+		do
+			Result := id = connect_id
+		end
+
 
 	options_id: INTEGER = 0
 	get_id: INTEGER = 1

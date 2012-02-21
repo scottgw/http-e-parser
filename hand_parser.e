@@ -7,16 +7,23 @@ note
 class
 	HAND_PARSER
 
-
 feature
+	set_request (a_req: HTTP_REQUEST)
+		do
+			request := a_req
+		end
+
 	reset
 		do
 			first_line := True
 			error := False
+			finished := False
 			create request
 		end
 
 	parse_line (a_str: STRING)
+		require
+			not_finished: not finished
 		local
 			words: ARRAYED_LIST [STRING]
 		do
@@ -25,11 +32,16 @@ feature
 				parse_first_line (words)
 			else
 				words := strtok_header (a_str)
-				parse_others (words)
+				if words.count = 1 then
+					request.set_complete
+					finished := True
+				else
+					parse_others (words)
+				end
 			end
 		end
 
-
+	finished: BOOLEAN
 	request: HTTP_REQUEST
 	error: BOOLEAN
 
@@ -94,7 +106,22 @@ feature {NONE}
 
 	add_uri (a_str: STRING)
 		do
-			request.set_uri (a_str)
+			request.set_uri (parse_uri (a_str))
+		end
+
+	parse_uri (a_str: STRING): REQUEST_URI
+		local
+			i: INTEGER
+		do
+			if a_str.is_equal ("*") then
+				create Result.star
+			elseif a_str.as_lower.starts_with ("http://") then
+				i := a_str.index_of ('/', 8)
+				create Result.absolute (a_str.substring (8, i),
+				                        a_str.substring (i, a_str.count))
+			elseif a_str [1] = '/' then
+				create Result.relative (a_str)
+			end
 		end
 
 	parse_method (a_str: STRING): HTTP_METHOD

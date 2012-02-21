@@ -4,7 +4,7 @@ note
 	revision    : "$Revision$"
 
 class
-	APPLICATION
+	PARSE_TEST
 
 inherit
 	ARGUMENTS
@@ -18,25 +18,8 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
-			p: HTTP_PARSER
 			hand_parser: HAND_PARSER
 		do
---			--| Add your code here
---			create p.make
-
-
---			p.set_input_buffer (create {YY_BUFFER}.make ("GET * HTTP/1.1%R%N"))
---			p.parse
-
---			if p.scanning_error then
---				print ("Scanning error %N")
---			else
---				if p.syntax_error then
---					print ("Syntax error: " + p.text + "%N")
---				else
---					print (p.last_any_value.out + "%N")
---				end
---			end
 			create hand_parser
 			hand_parser.reset
 
