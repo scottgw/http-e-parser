@@ -107,8 +107,6 @@ feature
 	general_headers: ARRAYED_LIST [GENERAL_HEADER]
 	request_headers: ARRAYED_LIST [REQUEST_HEADER]
 
-	accept: REQUEST_HEADER
-
 	set_complete
 		do
 			complete := True
